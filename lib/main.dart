@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) { 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: isDarkMode ? ThemeData.dark(useMaterial3: true) : ThemeData.light(useMaterial3: true),
+      theme:ThemeData.dark(useMaterial3: true),
       home: const WeatherScreen(),
     );
   }

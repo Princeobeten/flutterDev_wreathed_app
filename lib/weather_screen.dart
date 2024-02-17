@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/main.dart';
 import 'secrets.dart';
 import 'widget/hourly_forecast_item.dart';
 import 'widget/additonal_info_item.dart';
 import 'package:http/http.dart' as http;
 
+String cityName='';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -22,7 +22,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   late Future<Map<String, dynamic>> weather;
   Future<Map<String, dynamic>> getCurrentWeather() async{
     try {
-      String cityName = "Nigeria";
+      cityName = "Nigeria";
       final res = await http.get(Uri.parse("http://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey"));
       final data = jsonDecode(res.body);
 
@@ -50,17 +50,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
           fontWeight: FontWeight.bold,
         ),
       ), centerTitle: true,
-
-      // App light / dark mode switch 
-      leading: IconButton(
-        onPressed: () {
-          setState(() {
-            isDarkMode = !isDarkMode;
-          });
-        },
-        icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
-      ),
-
 
       // Icon on title bar
         actions: [ 
@@ -114,7 +103,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Text('$currentTemp K', style: const TextStyle(
+                              Text('$cityName - $currentTemp K', style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 32,
                               ),), 
                               const SizedBox(height: 16,),
@@ -141,14 +130,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   ),
                 ), const SizedBox(height: 10,),
                 SizedBox(
-                  height: 125,
+                  height: 130,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       final hourlyForecastData = data['list'][index];
                       final time = DateTime.parse(hourlyForecastData['dt_txt']);
-                      return HourlyForecastItem(
+                      return HourlyForecastItem( 
                         icon: hourlyForecastData['weather'][0]['main'] == "Clouds" || hourlyForecastData['weather'][0]['main'] == 'Rain' ? Icons.cloud :  Icons.snowing,
                         time: DateFormat.jm().format(time) ,
                         temperature: hourlyForecastData['main']['temp'].toString()
